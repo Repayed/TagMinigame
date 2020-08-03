@@ -1,0 +1,5 @@
+name: TagMinigame
+main: me.repayed.tagminigame.TagMinigame
+version: 1.0-SNAPSHOT
+author: Repayed
+description: My first minigame. A TNT Tag. Not a copy of hypixel.
