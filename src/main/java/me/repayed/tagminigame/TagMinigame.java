@@ -21,7 +21,7 @@ public class TagMinigame extends JavaPlugin {
         loadConfig();
         this.configFile = new ConfigFile();
 
-        gameArena = new GameArena();
+        gameArena = new GameArena(this);
         this.tagPlayerManager = new TagPlayerManager();
 
         loadListeners();
@@ -48,17 +48,17 @@ public class TagMinigame extends JavaPlugin {
         return this.tagPlayerManager;
     }
 
-    public void registerListener(Listener listener) {
+    private void registerListener(Listener listener) {
         getServer().getPluginManager().registerEvents(listener, this);
     }
 
-    public void loadListeners() {
+    private void loadListeners() {
         registerListener(new PlayerJoinListener());
-        registerListener(new PlayerHitPlayerListener());
-        registerListener(new PlayerLeaveListener());
-        registerListener(new PlayerBreakBlockListener());
+        registerListener(new PlayerHitPlayerListener(this));
+        registerListener(new PlayerLeaveListener(tagPlayerManager));
+        registerListener(new PlayerBreakBlockListener(this));
         registerListener(new PlayerInteractListener());
-        registerListener(new PlayerPlaceBlockListener());
+        registerListener(new PlayerPlaceBlockListener(this));
     }
 
 }

@@ -6,8 +6,11 @@ import org.bukkit.command.CommandSender;
 
 public class SetSpawnCommand implements CommandExecutor {
 
+    // Lazy way of making commands.
+    // future self plz make a system to handle commands/subcommands.
+
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return false;
     }
 }

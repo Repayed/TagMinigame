@@ -4,11 +4,12 @@ import java.util.UUID;
 
 public class TagPlayer {
     private UUID uuid;
-    private boolean isInGame;
+    private boolean isPlaying;
     private boolean isTagger;
 
     public TagPlayer(UUID uuid) {
         this.uuid = uuid;
+        this.isPlaying = false;
         this.isTagger = false;
     }
 
@@ -16,12 +17,12 @@ public class TagPlayer {
         return this.uuid;
     }
 
-    public boolean isInGame() {
-        return this.isInGame;
+    public boolean isPlaying() {
+        return this.isPlaying;
     }
 
-    public void setInGame(boolean isInGame) {
-        this.isInGame = isInGame;
+    public void setPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
     }
 
     public boolean isTagger() {
