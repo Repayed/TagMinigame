@@ -13,19 +13,28 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
-    private GameArena gameArena = TagMinigame.getInstance().getGameArena();
+    private TagMinigame tagMinigame;
+    private GameArena gameArena;
+
+    public PlayerJoinListener(TagMinigame tagMinigame) {
+        this.tagMinigame = tagMinigame;
+        this.gameArena = this.tagMinigame.getGameArena();
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
         if (gameArena.getGameState() == GameState.WAITING || gameArena.getGameState() == GameState.STARTING) {
-            if (!TagMinigame.getInstance().getTagPlayerManager().containsPlayer(new TagPlayer(player.getUniqueId()))) {
-                TagMinigame.getInstance().getTagPlayerManager().addPlayer(new TagPlayer(player.getUniqueId()));
+            if(!tagMinigame.getTagPlayerManager().containsPlayer(player.getUniqueId())) {
+                tagMinigame.getTagPlayerManager().addPlayer(new TagPlayer(player.getUniqueId()));
             }
 
             Bukkit.broadcastMessage(Chat.format("&eA new challenger has appeared! &6" + player.getDisplayName() + " has joined."));
             Bukkit.broadcastMessage(Chat.format("&7There are currently" + Bukkit.getOnlinePlayers() + " players."));
+
+            // if should start, start countdown.
+
         }
     }
 }

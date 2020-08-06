@@ -8,8 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class TagMinigame extends JavaPlugin {
-    private static TagMinigame instance;
-
     private ConfigFile configFile;
 
     private GameArena gameArena;
@@ -17,18 +15,13 @@ public class TagMinigame extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
         loadConfig();
-        this.configFile = new ConfigFile();
+        this.configFile = new ConfigFile(this);
 
         gameArena = new GameArena(this);
         this.tagPlayerManager = new TagPlayerManager();
 
         loadListeners();
-    }
-
-    public static TagMinigame getInstance() {
-        return instance;
     }
 
     public GameArena getGameArena() {
@@ -53,11 +46,11 @@ public class TagMinigame extends JavaPlugin {
     }
 
     private void loadListeners() {
-        registerListener(new PlayerJoinListener());
+        registerListener(new PlayerJoinListener(this));
         registerListener(new PlayerHitPlayerListener(this));
         registerListener(new PlayerLeaveListener(tagPlayerManager));
         registerListener(new PlayerBreakBlockListener(this));
-        registerListener(new PlayerInteractListener());
+        registerListener(new PlayerInteractListener(this));
         registerListener(new PlayerPlaceBlockListener(this));
     }
 
