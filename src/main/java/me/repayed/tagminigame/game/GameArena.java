@@ -10,6 +10,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Iterator;
+import java.util.Random;
+
 public class GameArena {
     private TagMinigame tagMinigame;
 
@@ -47,7 +50,7 @@ public class GameArena {
         return this.gameState;
     }
 
-    public void setGameState(GameState gameState) {
+    private void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
 
@@ -98,8 +101,8 @@ public class GameArena {
     }
 
     public void startGame() {
-        if(getGameState() == GameState.INGAME) {
-            for(TagPlayer tagPlayer : tagPlayerManager.getTagPlayers()) {
+        if (getGameState() == GameState.INGAME) {
+            for (TagPlayer tagPlayer : tagPlayerManager.getTagPlayers()) {
                 Player player = Bukkit.getPlayer(tagPlayer.getUuid());
                 player.teleport(getGameLocation());
             }
@@ -109,19 +112,19 @@ public class GameArena {
     }
 
     public void startExplosionCountdown() {
-        if(getGameState() == GameState.INGAME) {
+        if (getGameState() == GameState.INGAME) {
 
             new BukkitRunnable() {
                 int count = 30;
 
                 @Override
                 public void run() {
-                    if(count == 0) {
+                    if (count == 0) {
                         Bukkit.broadcastMessage(Chat.format("&4&lEXPLOSION COUNTDOWN &chas now ended."));
                     } else {
-                        if(count == 30) {
+                        if (count == 30) {
                             Bukkit.broadcastMessage(Chat.format("&4&lEXPLOSION COUNTDOWN &chas now started."));
-                        } else if(count == 15 || count == 10 || count <= 5) {
+                        } else if (count == 15 || count == 10 || count <= 5) {
                             Bukkit.broadcastMessage(Chat.format("&4&lEXPLOSION COUNTDOWN &cwill explode in " + count + " seconds"));
                         }
                     }
@@ -131,8 +134,30 @@ public class GameArena {
         }
     }
 
-    public void chooseRandomTagger() {
+    public void makeTagger(TagPlayer tagPlayer) {
+        tagPlayer.setTagger(true);
+        Player player = Bukkit.getPlayer(tagPlayer.getUuid());
 
+
+    }
+
+    public void removeTagger(TagPlayer tagPlayer) {
+        tagPlayer.setTagger(false);
+    }
+
+    public boolean isTagger(TagPlayer tagPlayer) {
+        return tagPlayer.isPlaying() && tagPlayer.isTagger();
+    }
+
+    public void chooseRandomTagger() {
+        int taggerIndex = new Random().nextInt(this.tagPlayerManager.getTagPlayers().size());
+
+        Iterator<TagPlayer> iterator = this.tagPlayerManager.getTagPlayers().iterator();
+        for (int i = 0; i < taggerIndex; i++) {
+            if (iterator.next().isPlaying()) {
+                iterator.next().setTagger(true);
+            }
+        }
     }
 
 }

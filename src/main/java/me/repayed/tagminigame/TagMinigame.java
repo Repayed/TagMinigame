@@ -48,7 +48,7 @@ public class TagMinigame extends JavaPlugin {
     private void loadListeners() {
         registerListener(new PlayerJoinListener(this));
         registerListener(new PlayerHitPlayerListener(this));
-        registerListener(new PlayerLeaveListener(tagPlayerManager));
+        registerListener(new PlayerLeaveListener(this.tagPlayerManager));
         registerListener(new PlayerBreakBlockListener(this));
         registerListener(new PlayerInteractListener(this));
         registerListener(new PlayerPlaceBlockListener(this));
