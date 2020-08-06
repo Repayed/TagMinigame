@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class GameArena {
-    private TagMinigame tagMinigameInstance;
+    private TagMinigame tagMinigame;
 
     private ConfigFile configFile;
 
@@ -25,7 +25,7 @@ public class GameArena {
     private Location gameLocation;
 
     public GameArena(TagMinigame tagMinigame) {
-        this.tagMinigameInstance = tagMinigame;
+        this.tagMinigame = tagMinigame;
         this.configFile = tagMinigame.getConfigFile();
 
         this.arenaName = this.configFile.getArenaName();
@@ -92,7 +92,7 @@ public class GameArena {
                     }
                 }
 
-            }.runTaskTimer(tagMinigameInstance, 0, 20L);
+            }.runTaskTimer(this.tagMinigame, 0, 20L);
 
         }
     }
@@ -127,7 +127,7 @@ public class GameArena {
                     }
                 }
 
-            }.runTaskTimer(tagMinigameInstance, 0, 20L);
+            }.runTaskTimer(this.tagMinigame, 0, 20L);
         }
     }
 
