@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public class PlayerLeaveListener implements Listener {
 
-    private TagPlayerManager tagPlayerManager;
+    private final TagPlayerManager tagPlayerManager;
 
-    public PlayerLeaveListener(TagPlayerManager tagPlayerManager) {
+    public PlayerLeaveListener(final TagPlayerManager tagPlayerManager) {
         this.tagPlayerManager = tagPlayerManager;
     }
 
