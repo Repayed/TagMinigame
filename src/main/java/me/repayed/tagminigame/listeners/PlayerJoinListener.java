@@ -13,10 +13,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
-    private TagMinigame tagMinigame;
-    private GameArena gameArena;
+    private final TagMinigame tagMinigame;
+    private final GameArena gameArena;
 
-    public PlayerJoinListener(TagMinigame tagMinigame) {
+    public PlayerJoinListener(final TagMinigame tagMinigame) {
         this.tagMinigame = tagMinigame;
         this.gameArena = this.tagMinigame.getGameArena();
     }
@@ -26,9 +26,7 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
 
         if (gameArena.getGameState() == GameState.WAITING || gameArena.getGameState() == GameState.STARTING) {
-            if (!tagMinigame.getTagPlayerManager().containsPlayer(player.getUniqueId())) {
-                tagMinigame.getTagPlayerManager().addPlayer(new TagPlayer(player.getUniqueId()));
-            }
+            tagMinigame.getTagPlayerManager().addPlayer(new TagPlayer(player.getUniqueId()));
 
             player.teleport(this.gameArena.getLobbyLocation());
 
@@ -39,6 +37,9 @@ public class PlayerJoinListener implements Listener {
                 if (this.gameArena.shouldCountdownStart()) {
                     this.gameArena.startGameCountdown();
                 }
+
+                this.gameArena.startGame();
+
             }
 
         }

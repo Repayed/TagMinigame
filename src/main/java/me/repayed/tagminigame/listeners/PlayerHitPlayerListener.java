@@ -9,9 +9,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class PlayerHitPlayerListener implements Listener {
 
-    private TagMinigame tagMinigame;
+    private final TagMinigame tagMinigame;
 
-    public PlayerHitPlayerListener(TagMinigame tagMinigame) {
+    public PlayerHitPlayerListener(final TagMinigame tagMinigame) {
         this.tagMinigame = tagMinigame;
     }
 
@@ -25,6 +25,8 @@ public class PlayerHitPlayerListener implements Listener {
                 Player hitter = (Player) event.getDamager();
 
                 if(this.tagMinigame.getTagPlayerManager().getTagPlayerByUUID(hitter.getUniqueId()).isTagger()) {
+                    this.tagMinigame.getTagPlayerManager().getTagPlayerByUUID(hitter.getUniqueId()).setTagger(false);
+                    this.tagMinigame.getTagPlayerManager().getTagPlayerByUUID(hitPlayer.getUniqueId()).setTagger(true);
                     // make hit player the tagger. remove hitter from being tagger. (perhaps make a method in GameArena for this)
                 }
 

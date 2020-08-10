@@ -22,7 +22,7 @@ public class TagPlayerManager {
     public void removePlayer(UUID uuid) {
         this.tagPlayers.stream()
                 .filter(player -> player.getUuid().toString().equalsIgnoreCase(uuid.toString()))
-                .forEach(filteredPlayer -> removePlayer(filteredPlayer)); // figure out wtf a method reference lambda thing is
+                .forEach(this::removePlayer); // figure out wtf a method reference lambda thing is | FUTURE SELF TO OLD SELF -> I FOUND IT ON STACKOVERFLOW :D
     }
 
     public boolean containsPlayer(TagPlayer tagPlayer) {

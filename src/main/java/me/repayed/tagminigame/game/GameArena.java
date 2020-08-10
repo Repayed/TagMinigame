@@ -12,22 +12,23 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Iterator;
 import java.util.Random;
+import java.util.UUID;
 
 public class GameArena {
-    private TagMinigame tagMinigame;
+    private final TagMinigame tagMinigame;
 
-    private ConfigFile configFile;
+    private final ConfigFile configFile;
 
-    private String arenaName;
+    private final String arenaName;
     private GameState gameState;
 
-    private TagPlayerManager tagPlayerManager;
+    private final TagPlayerManager tagPlayerManager;
     private final int MINIMUM_STARTING_PLAYER_COUNT;
 
     private Location lobbyLocation;
     private Location gameLocation;
 
-    public GameArena(TagMinigame tagMinigame) {
+    public GameArena(final TagMinigame tagMinigame) {
         this.tagMinigame = tagMinigame;
         this.configFile = tagMinigame.getConfigFile();
 
@@ -107,7 +108,7 @@ public class GameArena {
                 player.teleport(getGameLocation());
             }
             // choose random tagger
-            startGameCountdown();
+            startExplosionCountdown();
         }
     }
 
@@ -134,11 +135,16 @@ public class GameArena {
         }
     }
 
-    public void makeTagger(TagPlayer tagPlayer) {
+    public void setPlayerAsTagger(UUID uuid) {
+        TagPlayer tagPlayer = this.tagPlayerManager.getTagPlayerByUUID(uuid);
         tagPlayer.setTagger(true);
         Player player = Bukkit.getPlayer(tagPlayer.getUuid());
 
 
+    }
+
+    public void removeTagger(UUID uuid) {
+        this.tagPlayerManager.getTagPlayerByUUID(uuid).setTagger(false);
     }
 
     public void removeTagger(TagPlayer tagPlayer) {

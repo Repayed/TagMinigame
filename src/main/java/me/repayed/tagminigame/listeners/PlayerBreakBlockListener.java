@@ -8,9 +8,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class PlayerBreakBlockListener implements Listener {
 
-    private TagMinigame tagMinigame;
+    private final TagMinigame tagMinigame;
 
-    public PlayerBreakBlockListener(TagMinigame tagMinigame) {
+    public PlayerBreakBlockListener(final TagMinigame tagMinigame) {
         this.tagMinigame = tagMinigame;
     }
 

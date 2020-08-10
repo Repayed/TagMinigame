@@ -8,9 +8,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PlayerPlaceBlockListener implements Listener {
 
-    private TagMinigame tagMinigame;
+    private final TagMinigame tagMinigame;
 
-    public PlayerPlaceBlockListener(TagMinigame tagMinigame) {
+    public PlayerPlaceBlockListener(final TagMinigame tagMinigame) {
         this.tagMinigame = tagMinigame;
     }
 
