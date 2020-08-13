@@ -27,7 +27,6 @@ public class PlayerHitPlayerListener implements Listener {
                 if(this.tagMinigame.getTagPlayerManager().getTagPlayerByUUID(hitter.getUniqueId()).isTagger()) {
                     this.tagMinigame.getGameArena().removeTagger(hitter.getUniqueId());
                     this.tagMinigame.getGameArena().setPlayerAsTagger(hitPlayer.getUniqueId());
-                    // make hit player the tagger. remove hitter from being tagger. (perhaps make a method in GameArena for this)
                 }
 
             } else {

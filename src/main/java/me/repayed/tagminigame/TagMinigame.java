@@ -4,8 +4,9 @@ import me.repayed.tagminigame.files.ConfigFile;
 import me.repayed.tagminigame.game.GameArena;
 import me.repayed.tagminigame.listeners.*;
 import me.repayed.tagminigame.player.TagPlayerManager;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
 
 public class TagMinigame extends JavaPlugin {
     private ConfigFile configFile;
@@ -18,8 +19,9 @@ public class TagMinigame extends JavaPlugin {
         loadConfig();
         this.configFile = new ConfigFile(this);
 
-        gameArena = new GameArena(this);
         this.tagPlayerManager = new TagPlayerManager();
+        this.gameArena = new GameArena(this);
+
 
         loadListeners();
     }
@@ -41,17 +43,14 @@ public class TagMinigame extends JavaPlugin {
         return this.tagPlayerManager;
     }
 
-    private void registerListener(Listener listener) {
-        getServer().getPluginManager().registerEvents(listener, this);
+    private void loadListeners() {
+        Arrays.asList(
+                new PlayerJoinListener(this), new PlayerHitPlayerListener(this),
+                new PlayerLeaveListener(this.tagPlayerManager), new PlayerBreakBlockListener(this),
+                new PlayerInteractListener(this), new PlayerPlaceBlockListener(this),
+                new PlayerFoodLevelListener())
+                .forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 
-    private void loadListeners() {
-        registerListener(new PlayerJoinListener(this));
-        registerListener(new PlayerHitPlayerListener(this));
-        registerListener(new PlayerLeaveListener(this.tagPlayerManager));
-        registerListener(new PlayerBreakBlockListener(this));
-        registerListener(new PlayerInteractListener(this));
-        registerListener(new PlayerPlaceBlockListener(this));
-    }
 
 }

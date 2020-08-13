@@ -4,14 +4,14 @@ options:
     needed-players: 2
     locations:
       lobby-location:
-        world: "A-World"
-        x: 1
-        y: 2
-        z: 3
+        world: "world"
+        x: -109.098
+        y: 79
+        z: 440.561
       game-location:
-        world: "A-World"
-        x: 1
-        y: 2
-        z: 3
+        world: "world"
+        x: -108.238
+        y: 64.00000
+        z: 441.735
 
 
