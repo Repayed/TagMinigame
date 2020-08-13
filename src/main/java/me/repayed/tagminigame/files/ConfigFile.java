@@ -7,15 +7,12 @@ import org.bukkit.Location;
 public class ConfigFile {
     private TagMinigame tagMinigame;
 
-    private String arenaName;
-
     private Location lobbyLocation;
     private Location gameLocation;
 
     public ConfigFile(TagMinigame tagMinigame) {
         this.tagMinigame = tagMinigame;
 
-        this.arenaName = this.tagMinigame.getConfig().getString("options.arena.name");
         loadLobbyLocation();
         loadGameLocation();
     }
@@ -36,10 +33,6 @@ public class ConfigFile {
         final double gameZLocation = this.tagMinigame.getConfig().getInt("options.arena.locations.game-location.z");
 
         this.gameLocation = new Location(Bukkit.getWorld(gameWorld), gameXLocation, gameYLocation, gameZLocation);
-    }
-
-    public String getArenaName() {
-        return this.arenaName;
     }
 
     public Location getLobbylocation() {

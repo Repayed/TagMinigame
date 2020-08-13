@@ -23,22 +23,28 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
+
         Player player = event.getPlayer();
+        player.getInventory().clear();
+        player.getInventory().setHelmet(null);
+        player.setFoodLevel(20);
+        player.setExp(0);
 
         if (gameArena.getGameState() == GameState.WAITING || gameArena.getGameState() == GameState.STARTING) {
-            tagMinigame.getTagPlayerManager().addPlayer(new TagPlayer(player.getUniqueId()));
+            TagPlayer tagPlayer = new TagPlayer(player.getUniqueId());
+
+            tagMinigame.getTagPlayerManager().addPlayer(tagPlayer);
 
             player.teleport(this.gameArena.getLobbyLocation());
 
             Bukkit.broadcastMessage(Chat.format("&eA new challenger has appeared! &6" + player.getDisplayName() + " has joined."));
-            Bukkit.broadcastMessage(Chat.format("&7There are currently" + Bukkit.getOnlinePlayers() + " players."));
+            Bukkit.broadcastMessage(Chat.format("&7There are currently " + Bukkit.getOnlinePlayers().size() + " players."));
 
             if (this.gameArena.getGameState() == GameState.WAITING) {
                 if (this.gameArena.shouldCountdownStart()) {
                     this.gameArena.startGameCountdown();
                 }
-
-                this.gameArena.startGame();
 
             }
 
