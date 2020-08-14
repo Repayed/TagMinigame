@@ -1,6 +1,5 @@
 options:
   arena:
-    name: "West"
     needed-players: 2
     locations:
       lobby-location:
