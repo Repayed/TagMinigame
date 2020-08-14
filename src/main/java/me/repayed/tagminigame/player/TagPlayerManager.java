@@ -15,22 +15,23 @@ public class TagPlayerManager {
         this.tagPlayers.add(tagPlayer);
     }
 
-    public void removePlayer(TagPlayer tagPlayer) {
-        this.tagPlayers.remove(tagPlayer);
-    }
+//
+//    @Deprecated
+//    public void removePlayer(UUID uuid) {
+//        if (containsPlayer(uuid)) {
+//            this.tagPlayers.stream()
+//                    .filter(player -> player.getUuid() == uuid)
+//                    .forEach(this::removePlayer);
+//        }
+//    }
 
     public void removePlayer(UUID uuid) {
-        this.tagPlayers.stream()
-                .filter(player -> player.getUuid().toString().equalsIgnoreCase(uuid.toString()))
-                .forEach(this::removePlayer); // figure out wtf a method reference lambda thing is | FUTURE SELF TO OLD SELF -> I FOUND IT ON STACKOVERFLOW :D
+        if (containsPlayer(uuid)) {
+            this.tagPlayers.removeIf(player -> player.getUuid().equals(uuid));
+        }
     }
 
-    public boolean containsPlayer(TagPlayer tagPlayer) {
-        return this.tagPlayers.stream()
-                .anyMatch(player -> player.getUuid().toString().equalsIgnoreCase(tagPlayer.getUuid().toString()));
-    }
-
-    public boolean containsPlayer(UUID uuid) {
+    private boolean containsPlayer(UUID uuid) {
         return this.tagPlayers.stream()
                 .anyMatch(player -> player.getUuid().toString().equalsIgnoreCase(uuid.toString()));
     }
