@@ -21,11 +21,7 @@ public class PlayerLeaveListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         event.setQuitMessage(null);
 
-        final UUID playerUuid = event.getPlayer().getUniqueId();
-
-        if(this.tagPlayerManager.containsPlayer(playerUuid)) {
-            this.tagPlayerManager.removePlayer(playerUuid);
-        }
+        this.tagPlayerManager.removePlayer(event.getPlayer().getUniqueId());
 
         Bukkit.broadcastMessage(Chat.format("&6" + event.getPlayer().getDisplayName() + " &ehas left the game."));
     }

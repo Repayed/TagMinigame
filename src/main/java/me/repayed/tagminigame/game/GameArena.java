@@ -17,8 +17,6 @@ import java.util.UUID;
 public class GameArena {
     private final TagMinigame tagMinigame;
 
-    private final ConfigFile configFile;
-
     private GameState gameState;
 
     private final TagPlayerManager tagPlayerManager;
@@ -29,12 +27,12 @@ public class GameArena {
 
     public GameArena(final TagMinigame tagMinigame) {
         this.tagMinigame = tagMinigame;
-        this.configFile = this.tagMinigame.getConfigFile();
+        final ConfigFile configFile = this.tagMinigame.getConfigFile();
 
-        this.lobbyLocation = this.configFile.getLobbylocation();
-        this.gameLocation = this.configFile.getGameLocation();
+        this.lobbyLocation = configFile.getLobbylocation();
+        this.gameLocation = configFile.getGameLocation();
 
-        this.MINIMUM_STARTING_PLAYER_COUNT = this.configFile.getNeededPlayers();
+        this.MINIMUM_STARTING_PLAYER_COUNT = configFile.getNeededPlayers();
 
         this.tagPlayerManager = this.tagMinigame.getTagPlayerManager();
 
@@ -49,7 +47,7 @@ public class GameArena {
         this.gameState = gameState;
     }
 
-    public int getMinimumStartingPlayerCount() {
+    private int getMinimumStartingPlayerCount() {
         return this.MINIMUM_STARTING_PLAYER_COUNT;
     }
 
@@ -62,7 +60,11 @@ public class GameArena {
     }
 
     public boolean shouldCountdownStart() {
-        return Bukkit.getOnlinePlayers().size() >= MINIMUM_STARTING_PLAYER_COUNT && getGameState() == GameState.WAITING;
+        return Bukkit.getOnlinePlayers().size() >= getMinimumStartingPlayerCount() && getGameState() == GameState.WAITING;
+    }
+
+    private boolean shouldGameRestart() {
+        return Bukkit.getOnlinePlayers().size() >= getMinimumStartingPlayerCount();
     }
 
     public void startGameCountdown() {
@@ -75,7 +77,7 @@ public class GameArena {
                 @Override
                 public void run() {
                     if (count == 0) {
-                        if (Bukkit.getOnlinePlayers().size() >= MINIMUM_STARTING_PLAYER_COUNT) {
+                        if (Bukkit.getOnlinePlayers().size() >= getMinimumStartingPlayerCount()) {
                             Bukkit.broadcastMessage(Chat.format("&a&lTHE COUNTDOWN HAS ENDED! PREPARE FOR BATTLE!"));
                             cancel();
                             setGameState(GameState.INGAME);
@@ -119,6 +121,38 @@ public class GameArena {
         return amount <= 1;
     }
 
+    private void endGame() {
+        setGameState(GameState.ENDED);
+        Bukkit.broadcastMessage(Chat.format("&a&lThe game has ended! &2&lCongratulations &aparticipants."));
+    }
+
+    private void restartGame() {
+        if (getGameState() == GameState.ENDED) {
+            Bukkit.broadcastMessage(Chat.format("&aRestarting the game..."));
+
+            this.tagPlayerManager.getTagPlayers().forEach(tagPlayer -> {
+                tagPlayer.setPlaying(false);
+
+                if (Bukkit.getPlayer(tagPlayer.getUuid()).isOnline()) {
+                    Player player = Bukkit.getPlayer(tagPlayer.getUuid());
+                    player.teleport(getLobbyLocation());
+                    player.setGameMode(GameMode.SURVIVAL);
+                    player.setHealth(20D);
+
+                    if (tagPlayer.isTagger()) {
+                        removeTagger(player.getUniqueId());
+                    }
+                } else {
+                    this.tagPlayerManager.removePlayer(tagPlayer.getUuid());
+                }
+
+            });
+
+            setGameState(GameState.WAITING);
+            startGameCountdown();
+        }
+    }
+
     private void startExplosionCountdown() {
         if (getGameState() == GameState.INGAME) {
 
@@ -131,10 +165,21 @@ public class GameArena {
 
                     if (count == 0) {
                         Bukkit.broadcastMessage(Chat.format("&4&lEXPLOSION COUNTDOWN &chas now ended."));
+                        eliminatePlayer(getCurrentlyTaggedPlayer().getUuid());
                         cancel();
 
-                        if(getGameState() == GameState.INGAME) {
-                            startExplosionCountdown();
+                        if (getGameState() == GameState.INGAME) {
+                            if (!shouldEnd()) {
+                                startExplosionCountdown();
+                                setPlayerAsTagger(chooseRandomTagger());
+                            } else {
+                                endGame();
+
+                                if (shouldGameRestart()) {
+                                    restartGame();
+                                }
+                            }
+
                         }
 
                     } else {
@@ -151,10 +196,6 @@ public class GameArena {
     }
 
     public void setPlayerAsTagger(UUID uuid) {
-        if(uuid == null) {
-            Bukkit.broadcastMessage("test is null");
-        }
-
         Bukkit.broadcastMessage(Bukkit.getPlayer(uuid).getDisplayName());
         TagPlayer tagPlayer = this.tagPlayerManager.getTagPlayerByUUID(uuid);
         tagPlayer.setTagger(true);
@@ -175,11 +216,21 @@ public class GameArena {
         player.getInventory().setHelmet(null);
     }
 
-    public void removePlayer(UUID uuid) {
+    private TagPlayer getCurrentlyTaggedPlayer() {
+        return this.tagPlayerManager.getTagPlayers().stream()
+                .filter(tagPlayer -> tagPlayer.isPlaying() && tagPlayer.isTagger())
+                .findAny()
+                .orElse(null);
+    }
+
+    private void eliminatePlayer(UUID uuid) {
         this.tagPlayerManager.getTagPlayerByUUID(uuid).setPlaying(false);
         this.tagPlayerManager.getTagPlayerByUUID(uuid).setTagger(false);
 
         Player player = Bukkit.getPlayer(uuid);
+
+        player.getWorld().createExplosion(player.getLocation(), 0.0F);
+        Bukkit.broadcastMessage(Chat.format("&4" + player.getDisplayName() + " &chas been eliminated."));
 
         player.getInventory().clear();
         player.setGameMode(GameMode.SPECTATOR);
