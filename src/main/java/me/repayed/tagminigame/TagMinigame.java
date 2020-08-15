@@ -3,6 +3,12 @@ package me.repayed.tagminigame;
 import me.repayed.tagminigame.files.ConfigFile;
 import me.repayed.tagminigame.game.GameArena;
 import me.repayed.tagminigame.listeners.*;
+import me.repayed.tagminigame.listeners.interaction.PlayerBreakBlockListener;
+import me.repayed.tagminigame.listeners.interaction.PlayerHitPlayerListener;
+import me.repayed.tagminigame.listeners.interaction.PlayerInteractListener;
+import me.repayed.tagminigame.listeners.interaction.PlayerPlaceBlockListener;
+import me.repayed.tagminigame.listeners.connection.PlayerJoinListener;
+import me.repayed.tagminigame.listeners.connection.PlayerLeaveListener;
 import me.repayed.tagminigame.player.TagPlayerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.UUID;
 
-public class GameArena {
+public final class GameArena {
     private final TagMinigame tagMinigame;
 
     private GameState gameState;
@@ -121,12 +121,12 @@ public class GameArena {
         return amount <= 1;
     }
 
-    public void endGame() {
+    public final void endGame() {
         setGameState(GameState.ENDED);
         Bukkit.broadcastMessage(Chat.format("&a&lThe game has ended! &2&lCongratulations &aparticipants."));
     }
 
-    public void restartGame(boolean startGameCountdown) {
+    public final void restartGame(boolean startGameCountdown) {
         if (getGameState() == GameState.ENDED) {
             Bukkit.broadcastMessage(Chat.format("&aRestarting the game..."));
 
@@ -172,7 +172,7 @@ public class GameArena {
                     if (getGameState() != GameState.INGAME) cancel();
 
                     if (count == 0) {
-                        Bukkit.broadcastMessage(Chat.format("&4&lEXPLOSION COUNTDOWN &chas now ended."));
+                        Bukkit.broadcastMessage(Chat.format("&4Explosion &8| &7Countdown has &fended&7."));
                         eliminatePlayer(getCurrentlyTaggedPlayer().getUuid());
                         cancel();
 
@@ -193,9 +193,9 @@ public class GameArena {
 
                     } else {
                         if (count == 29) {
-                            Bukkit.broadcastMessage(Chat.format("&4&lEXPLOSION COUNTDOWN &chas now started."));
+                            Bukkit.broadcastMessage(Chat.format("&4Explosion &8| &7Countdown has &fstarted&7."));
                         } else if (count == 15 || count == 10 || count <= 5) {
-                            Bukkit.broadcastMessage(Chat.format("&4&lEXPLOSION COUNTDOWN &cwill explode in " + count + " seconds"));
+                            Bukkit.broadcastMessage(Chat.format("&4Explosion &8| &7will explode in &f" + count + "&7 seconds."));
                         }
                     }
                 }
@@ -207,20 +207,20 @@ public class GameArena {
     }
 
 
-    public void setPlayerAsTagger(UUID uuid) {
+    public final void setPlayerAsTagger(UUID uuid) {
         Bukkit.broadcastMessage(Bukkit.getPlayer(uuid).getDisplayName());
         TagPlayer tagPlayer = this.tagPlayerManager.getTagPlayerByUUID(uuid);
         tagPlayer.setTagger(true);
 
         Player player = Bukkit.getPlayer(uuid);
-        player.sendMessage(Chat.format("&cYou have been made the tagger. &4&lYou're now IT!"));
+        player.sendMessage(Chat.format("&c&lGame &8| &7You have been made the &ctagger&7!"));
         player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1.0F, 1.0F);
 
         player.getInventory().setHelmet(new ItemBuilder(Material.TNT).withName("&c&lYou're it!").withHiddenEnchantment().build());
         player.getInventory().setItemInHand(new ItemBuilder(Material.TNT).withName("&c&lTAG SOMEONE ELSE!").withHiddenEnchantment().build());
     }
 
-    public void removeTagger(UUID uuid) {
+    public final void removeTagger(UUID uuid) {
         this.tagPlayerManager.getTagPlayerByUUID(uuid).setTagger(false);
 
         Player player = Bukkit.getPlayer(uuid);
@@ -255,7 +255,7 @@ public class GameArena {
         Iterator<TagPlayer> iterator = this.tagPlayerManager.getTagPlayers().iterator();
         for (int i = 0; i < taggerIndex - 1; i++) {
             if (iterator.next().isPlaying()) {
-                Bukkit.broadcastMessage("Chose " + Bukkit.getPlayer(iterator.next().getUuid()).getDisplayName());
+                Bukkit.broadcastMessage("&cGame &8| &f" + Bukkit.getPlayer(iterator.next().getUuid()).getDisplayName() + " &7has been chosen as the tagger.");
                 return iterator.next().getUuid();
             }
         }
@@ -272,9 +272,9 @@ public class GameArena {
     private void broadcastWinner() {
         Player player = Bukkit.getPlayer(getWinner().getUuid());
 
-        Bukkit.broadcastMessage(Chat.format("                             &4&lTNT&c&lTAG"));
+        Bukkit.broadcastMessage(Chat.format("                             &c&lGAME &7[Ended]"));
         Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(Chat.format("         &aThe winner of this game is &2" + player.getDisplayName() + "&a!"));
+        Bukkit.broadcastMessage(Chat.format("         &7The winner of this game is &f" + player.getDisplayName() + "&7!"));
         Bukkit.broadcastMessage("");
     }
 

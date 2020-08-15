@@ -4,14 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class TagPlayerManager {
-    private Set<TagPlayer> tagPlayers;
+public final class TagPlayerManager {
+    private final Set<TagPlayer> tagPlayers;
 
     public TagPlayerManager() {
         this.tagPlayers = new HashSet<>();
     }
 
-    public void addPlayer(TagPlayer tagPlayer) {
+    public final void addPlayer(TagPlayer tagPlayer) {
         this.tagPlayers.add(tagPlayer);
     }
 
@@ -25,7 +25,7 @@ public class TagPlayerManager {
 //        }
 //    }
 
-    public void removePlayer(UUID uuid) {
+    public final void removePlayer(UUID uuid) {
         if (containsPlayer(uuid)) {
             this.tagPlayers.removeIf(player -> player.getUuid().equals(uuid));
         }
@@ -36,7 +36,7 @@ public class TagPlayerManager {
                 .anyMatch(player -> player.getUuid().toString().equalsIgnoreCase(uuid.toString()));
     }
 
-    public TagPlayer getTagPlayerByUUID(UUID uuid) {
+    public final TagPlayer getTagPlayerByUUID(UUID uuid) {
         return this.tagPlayers.stream()
                 .filter(tagPlayer -> tagPlayer.getUuid().toString().equalsIgnoreCase(uuid.toString()))
                 .findAny()
@@ -44,7 +44,7 @@ public class TagPlayerManager {
 
     }
 
-    public Set<TagPlayer> getTagPlayers() {
+    public final Set<TagPlayer> getTagPlayers() {
         return this.tagPlayers;
     }
 
