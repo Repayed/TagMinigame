@@ -1,4 +1,4 @@
-package me.repayed.tagminigame.listeners;
+package me.repayed.tagminigame.listeners.connection;
 
 import me.repayed.tagminigame.game.GameArena;
 import me.repayed.tagminigame.game.GameState;
@@ -14,7 +14,6 @@ public class PlayerLeaveListener implements Listener {
 
     private final GameArena gameArena;
     private final TagPlayerManager tagPlayerManager;
-
 
     public PlayerLeaveListener(final GameArena gameArena, final TagPlayerManager tagPlayerManager) {
         this.gameArena = gameArena;

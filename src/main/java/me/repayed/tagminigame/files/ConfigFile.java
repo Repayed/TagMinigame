@@ -4,7 +4,7 @@ import me.repayed.tagminigame.TagMinigame;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-public class ConfigFile {
+public final class ConfigFile {
     private final TagMinigame tagMinigame;
 
     private Location lobbyLocation;

@@ -1,4 +1,4 @@
-package me.repayed.tagminigame.listeners;
+package me.repayed.tagminigame.listeners.interaction;
 
 import me.repayed.tagminigame.TagMinigame;
 import me.repayed.tagminigame.game.GameState;
