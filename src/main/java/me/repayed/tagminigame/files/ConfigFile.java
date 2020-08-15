@@ -5,12 +5,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public class ConfigFile {
-    private TagMinigame tagMinigame;
+    private final TagMinigame tagMinigame;
 
     private Location lobbyLocation;
     private Location gameLocation;
 
-    public ConfigFile(TagMinigame tagMinigame) {
+    public ConfigFile(final TagMinigame tagMinigame) {
         this.tagMinigame = tagMinigame;
 
         loadLobbyLocation();

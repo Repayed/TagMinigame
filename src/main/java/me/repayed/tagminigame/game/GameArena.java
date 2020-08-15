@@ -47,7 +47,7 @@ public class GameArena {
         this.gameState = gameState;
     }
 
-    private int getMinimumStartingPlayerCount() {
+    public int getMinimumStartingPlayerCount() {
         return this.MINIMUM_STARTING_PLAYER_COUNT;
     }
 
@@ -121,12 +121,12 @@ public class GameArena {
         return amount <= 1;
     }
 
-    private void endGame() {
+    public void endGame() {
         setGameState(GameState.ENDED);
         Bukkit.broadcastMessage(Chat.format("&a&lThe game has ended! &2&lCongratulations &aparticipants."));
     }
 
-    private void restartGame() {
+    public void restartGame(boolean startGameCountdown) {
         if (getGameState() == GameState.ENDED) {
             Bukkit.broadcastMessage(Chat.format("&aRestarting the game..."));
 
@@ -138,10 +138,13 @@ public class GameArena {
                     player.teleport(getLobbyLocation());
                     player.setGameMode(GameMode.SURVIVAL);
                     player.setHealth(20D);
+                    player.getInventory().clear();
+                    player.getInventory().setHelmet(null);
 
                     if (tagPlayer.isTagger()) {
                         removeTagger(player.getUniqueId());
                     }
+
                 } else {
                     this.tagPlayerManager.removePlayer(tagPlayer.getUuid());
                 }
@@ -149,7 +152,10 @@ public class GameArena {
             });
 
             setGameState(GameState.WAITING);
-            startGameCountdown();
+
+            if (startGameCountdown) {
+                startGameCountdown();
+            }
         }
     }
 
@@ -163,6 +169,8 @@ public class GameArena {
                 public void run() {
                     count--;
 
+                    if (getGameState() != GameState.INGAME) cancel();
+
                     if (count == 0) {
                         Bukkit.broadcastMessage(Chat.format("&4&lEXPLOSION COUNTDOWN &chas now ended."));
                         eliminatePlayer(getCurrentlyTaggedPlayer().getUuid());
@@ -174,9 +182,10 @@ public class GameArena {
                                 setPlayerAsTagger(chooseRandomTagger());
                             } else {
                                 endGame();
+                                broadcastWinner();
 
                                 if (shouldGameRestart()) {
-                                    restartGame();
+                                    restartGame(true);
                                 }
                             }
 
@@ -191,9 +200,12 @@ public class GameArena {
                     }
                 }
 
+
             }.runTaskTimer(this.tagMinigame, 0, 20L);
         }
+
     }
+
 
     public void setPlayerAsTagger(UUID uuid) {
         Bukkit.broadcastMessage(Bukkit.getPlayer(uuid).getDisplayName());
@@ -233,6 +245,7 @@ public class GameArena {
         Bukkit.broadcastMessage(Chat.format("&4" + player.getDisplayName() + " &chas been eliminated."));
 
         player.getInventory().clear();
+        player.getInventory().setHelmet(null);
         player.setGameMode(GameMode.SPECTATOR);
     }
 
@@ -247,6 +260,22 @@ public class GameArena {
             }
         }
         return iterator.next().getUuid();
+    }
+
+    private TagPlayer getWinner() {
+        return this.tagPlayerManager.getTagPlayers().stream()
+                .filter(TagPlayer::isPlaying)
+                .findAny()
+                .orElse(null);
+    }
+
+    private void broadcastWinner() {
+        Player player = Bukkit.getPlayer(getWinner().getUuid());
+
+        Bukkit.broadcastMessage(Chat.format("                             &4&lTNT&c&lTAG"));
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage(Chat.format("         &aThe winner of this game is &2" + player.getDisplayName() + "&a!"));
+        Bukkit.broadcastMessage("");
     }
 
 }
