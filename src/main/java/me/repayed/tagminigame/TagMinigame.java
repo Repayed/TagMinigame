@@ -22,7 +22,6 @@ public class TagMinigame extends JavaPlugin {
         this.tagPlayerManager = new TagPlayerManager();
         this.gameArena = new GameArena(this);
 
-
         loadListeners();
     }
 
@@ -46,9 +45,9 @@ public class TagMinigame extends JavaPlugin {
     private void loadListeners() {
         Arrays.asList(
                 new PlayerJoinListener(this), new PlayerHitPlayerListener(this),
-                new PlayerLeaveListener(this.tagPlayerManager), new PlayerBreakBlockListener(this),
+                new PlayerLeaveListener(this.getGameArena(), this.getTagPlayerManager()), new PlayerBreakBlockListener(this),
                 new PlayerInteractListener(this), new PlayerPlaceBlockListener(this),
-                new PlayerFoodLevelListener())
+                new PlayerFoodLevelListener(), new PlayerInventoryListeners())
                 .forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 

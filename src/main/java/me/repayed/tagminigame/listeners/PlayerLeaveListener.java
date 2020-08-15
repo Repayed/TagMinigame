@@ -1,5 +1,8 @@
 package me.repayed.tagminigame.listeners;
 
+import me.repayed.tagminigame.game.GameArena;
+import me.repayed.tagminigame.game.GameState;
+import me.repayed.tagminigame.player.TagPlayer;
 import me.repayed.tagminigame.player.TagPlayerManager;
 import me.repayed.tagminigame.utils.Chat;
 import org.bukkit.Bukkit;
@@ -7,13 +10,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.UUID;
-
 public class PlayerLeaveListener implements Listener {
 
+    private final GameArena gameArena;
     private final TagPlayerManager tagPlayerManager;
 
-    public PlayerLeaveListener(final TagPlayerManager tagPlayerManager) {
+
+    public PlayerLeaveListener(final GameArena gameArena, final TagPlayerManager tagPlayerManager) {
+        this.gameArena = gameArena;
         this.tagPlayerManager = tagPlayerManager;
     }
 
@@ -24,6 +28,14 @@ public class PlayerLeaveListener implements Listener {
         this.tagPlayerManager.removePlayer(event.getPlayer().getUniqueId());
 
         Bukkit.broadcastMessage(Chat.format("&6" + event.getPlayer().getDisplayName() + " &ehas left the game."));
+
+        if (this.gameArena.getGameState() == GameState.INGAME) {
+            if (!(this.tagPlayerManager.getTagPlayers().stream()
+                    .filter(TagPlayer::isPlaying).count() >= this.gameArena.getMinimumStartingPlayerCount())) {
+                this.gameArena.endGame();
+                this.gameArena.restartGame(false);
+            }
+        }
     }
 
 }

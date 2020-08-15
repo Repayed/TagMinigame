@@ -30,6 +30,7 @@ public class PlayerJoinListener implements Listener {
         player.setGameMode(GameMode.SURVIVAL);
         player.getInventory().clear();
         player.getInventory().setHelmet(null);
+        player.setHealth(20);
         player.setFoodLevel(20);
         player.setExp(0);
 
