@@ -26,7 +26,7 @@ public class PlayerLeaveListener implements Listener {
 
         this.tagPlayerManager.removePlayer(event.getPlayer().getUniqueId());
 
-        Bukkit.broadcastMessage(Chat.format("&6" + event.getPlayer().getDisplayName() + " &ehas left the game."));
+        Bukkit.broadcastMessage(Chat.format("&c&lGame &8┃ &f" + event.getPlayer().getDisplayName() + " &7has left the game."));
 
         if (this.gameArena.getGameState() == GameState.INGAME) {
             if (!(this.tagPlayerManager.getTagPlayers().stream()

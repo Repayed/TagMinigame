@@ -35,14 +35,11 @@ public class PlayerJoinListener implements Listener {
         player.setExp(0);
 
         if (gameArena.getGameState() == GameState.WAITING || gameArena.getGameState() == GameState.STARTING) {
-            TagPlayer tagPlayer = new TagPlayer(player.getUniqueId());
-
-            tagMinigame.getTagPlayerManager().addPlayer(tagPlayer);
+            tagMinigame.getTagPlayerManager().addPlayer(new TagPlayer(player.getUniqueId()));
 
             player.teleport(this.gameArena.getLobbyLocation());
 
-            Bukkit.broadcastMessage(Chat.format("&eA new challenger has appeared! &6" + player.getDisplayName() + " has joined."));
-            Bukkit.broadcastMessage(Chat.format("&7There are currently " + Bukkit.getOnlinePlayers().size() + " players."));
+            Bukkit.broadcastMessage(Chat.format("&a&lGame &8┃ &f" + player.getDisplayName() + " &7has joined the game."));
 
             if (this.gameArena.getGameState() == GameState.WAITING) {
                 if (this.gameArena.shouldCountdownStart()) {
@@ -54,8 +51,3 @@ public class PlayerJoinListener implements Listener {
         }
     }
 }
-
-// self note -> So umm, a good idea might be to move some of this game logic like if this arena.get game state whatever to the GameArena class
-// to keep this class less clustered.
-
-// possible issue with the startGameCountdown(); method and anything after since async (literally know nothing about it so plz future self learn about it.

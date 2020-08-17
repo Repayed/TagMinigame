@@ -11,10 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ItemBuilder {
-    private ItemStack item;
-    private ItemMeta itemMeta;
+    private final ItemStack item;
+    private final ItemMeta itemMeta;
 
-     public ItemBuilder(Material material) {
+    public ItemBuilder(final Material material) {
         this.item = new ItemStack(material);
         this.itemMeta = this.item.getItemMeta();
     }

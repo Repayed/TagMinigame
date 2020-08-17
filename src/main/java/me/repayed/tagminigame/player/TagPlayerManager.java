@@ -15,16 +15,6 @@ public final class TagPlayerManager {
         this.tagPlayers.add(tagPlayer);
     }
 
-//
-//    @Deprecated
-//    public void removePlayer(UUID uuid) {
-//        if (containsPlayer(uuid)) {
-//            this.tagPlayers.stream()
-//                    .filter(player -> player.getUuid() == uuid)
-//                    .forEach(this::removePlayer);
-//        }
-//    }
-
     public final void removePlayer(UUID uuid) {
         if (containsPlayer(uuid)) {
             this.tagPlayers.removeIf(player -> player.getUuid().equals(uuid));
