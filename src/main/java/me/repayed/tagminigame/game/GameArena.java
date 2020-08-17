@@ -78,17 +78,20 @@ public final class GameArena {
                 public void run() {
                     if (count == 0) {
                         if (Bukkit.getOnlinePlayers().size() >= getMinimumStartingPlayerCount()) {
-                            Bukkit.broadcastMessage(Chat.format("&a&lTHE COUNTDOWN HAS ENDED! PREPARE FOR BATTLE!"));
+                            Bukkit.broadcastMessage(Chat.format("&c&lGame &8┃ &7The game has &fstarted&7!"));
                             cancel();
                             setGameState(GameState.INGAME);
                             startGame();
                         } else {
-                            Bukkit.broadcastMessage(Chat.format("&cA player has left the game. Waiting for more players."));
+                            Bukkit.broadcastMessage(Chat.format("&4&lGame &8┃ &7A player has left the game. Waiting for more players."));
                             setGameState(GameState.WAITING);
                             cancel();
                         }
                     } else {
-                        Bukkit.broadcastMessage(Chat.format("&eThe game will start in " + count + " seconds."));
+                        if (count == 60 || count == 45 || count == 30 || count == 15 || count == 10 || count <= 5) {
+                            Bukkit.broadcastMessage(Chat.format("&a&lGame &8┃ &7The game will start in &f" + count + "&7 seconds."));
+                            Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.NOTE_BASS, 1.0F, 1.0F));
+                        }
                         count--;
                     }
                 }
@@ -123,12 +126,11 @@ public final class GameArena {
 
     public final void endGame() {
         setGameState(GameState.ENDED);
-        Bukkit.broadcastMessage(Chat.format("&a&lThe game has ended! &2&lCongratulations &aparticipants."));
     }
 
     public final void restartGame(boolean startGameCountdown) {
         if (getGameState() == GameState.ENDED) {
-            Bukkit.broadcastMessage(Chat.format("&aRestarting the game..."));
+            Bukkit.broadcastMessage(Chat.format("&eRestarting the game..."));
 
             this.tagPlayerManager.getTagPlayers().forEach(tagPlayer -> {
                 tagPlayer.setPlaying(false);
@@ -172,7 +174,7 @@ public final class GameArena {
                     if (getGameState() != GameState.INGAME) cancel();
 
                     if (count == 0) {
-                        Bukkit.broadcastMessage(Chat.format("&4Explosion &8| &7Countdown has &fended&7."));
+                        Bukkit.broadcastMessage(Chat.format("&c&lGame &8┃ &7Countdown has &fended&7."));
                         eliminatePlayer(getCurrentlyTaggedPlayer().getUuid());
                         cancel();
 
@@ -193,9 +195,9 @@ public final class GameArena {
 
                     } else {
                         if (count == 29) {
-                            Bukkit.broadcastMessage(Chat.format("&4Explosion &8| &7Countdown has &fstarted&7."));
+                            Bukkit.broadcastMessage(Chat.format("&c&lGame &8┃ &7Countdown has &fstarted&7."));
                         } else if (count == 15 || count == 10 || count <= 5) {
-                            Bukkit.broadcastMessage(Chat.format("&4Explosion &8| &7will explode in &f" + count + "&7 seconds."));
+                            Bukkit.broadcastMessage(Chat.format("&c&lGame &8┃ &7TnT will explode in &f" + count + "&7 seconds."));
                         }
                     }
                 }
@@ -213,7 +215,7 @@ public final class GameArena {
         tagPlayer.setTagger(true);
 
         Player player = Bukkit.getPlayer(uuid);
-        player.sendMessage(Chat.format("&c&lGame &8| &7You have been made the &ctagger&7!"));
+        player.sendMessage(Chat.format("&c&lGame &8┃ &7You have been made the &ctagger&7!"));
         player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 1.0F, 1.0F);
 
         player.getInventory().setHelmet(new ItemBuilder(Material.TNT).withName("&c&lYou're it!").withHiddenEnchantment().build());
@@ -255,7 +257,7 @@ public final class GameArena {
         Iterator<TagPlayer> iterator = this.tagPlayerManager.getTagPlayers().iterator();
         for (int i = 0; i < taggerIndex - 1; i++) {
             if (iterator.next().isPlaying()) {
-                Bukkit.broadcastMessage("&cGame &8| &f" + Bukkit.getPlayer(iterator.next().getUuid()).getDisplayName() + " &7has been chosen as the tagger.");
+                Bukkit.broadcastMessage("&c&lGame &8┃ &f" + Bukkit.getPlayer(iterator.next().getUuid()).getDisplayName() + " &7has been chosen as the tagger.");
                 return iterator.next().getUuid();
             }
         }
@@ -272,6 +274,7 @@ public final class GameArena {
     private void broadcastWinner() {
         Player player = Bukkit.getPlayer(getWinner().getUuid());
 
+        Bukkit.broadcastMessage("");
         Bukkit.broadcastMessage(Chat.format("                             &c&lGAME &7[Ended]"));
         Bukkit.broadcastMessage("");
         Bukkit.broadcastMessage(Chat.format("         &7The winner of this game is &f" + player.getDisplayName() + "&7!"));
